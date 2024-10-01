@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# 열화상 이미지와 RGB 이미지 로드
+thermal_image = cv2.imread('thermal_image.jpg', cv2.IMREAD_GRAYSCALE)
+rgb_image = cv2.imread('rgb_image.jpg')
+
+# 열화상 이미지를 RGB로 변환
+thermal_rgb = cv2.applyColorMap(thermal_image, cv2.COLORMAP_JET)
+
+# 두 이미지를 같은 크기로 조정 (예: RGB 이미지 크기에 맞춤)
+thermal_rgb_resized = cv2.resize(thermal_rgb, (rgb_image.shape[1], rgb_image.shape[0]))
+
+# 오버레이를 위한 알파 값 설정
+alpha = 0.5  # 열화상 이미지의 투명도
+
+# 오버레이 병합
+overlay_image = cv2.addWeighted(rgb_image, 1 - alpha, thermal_rgb_resized, alpha, 0)
+
+# 결과 출력
+cv2.imshow('Overlay Image', overlay_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# 결과 이미지 저장
+cv2.imwrite('overlay_image.jpg', overlay_image)
